@@ -24,25 +24,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const passwordInput = document.getElementById('password');
   const submitBtn = document.getElementById('submit-btn');
 
-  // Quick Demo Fill
-  const demoAdminBtn = document.getElementById('demo-admin-btn');
-  const demoStudentBtn = document.getElementById('demo-student-btn');
 
-  if (demoAdminBtn) {
-    demoAdminBtn.addEventListener('click', () => {
-      emailInput.value = 'admin@exam.com';
-      passwordInput.value = 'admin123';
-      showToast('تم ملء بيانات حساب الأدمن', 'info');
-    });
-  }
-
-  if (demoStudentBtn) {
-    demoStudentBtn.addEventListener('click', () => {
-      emailInput.value = 'student@exam.com';
-      passwordInput.value = 'student123';
-      showToast('تم ملء بيانات حساب الطالب', 'info');
-    });
-  }
 
   // Handle Form Submission
   form.addEventListener('submit', async (e) => {
