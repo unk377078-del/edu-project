@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لوحة التحكم | إدارة المنصة</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20100%22><text y=%22.9em%22 font-size=%2290%22>👑</text></svg>">
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <span class="sidebar-brand-icon">📚</span>
+          <span>منصة الامتحانات</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-link active" data-tab="dashboard">
+          <span>📊</span>
+          <span>لوحة التحكم</span>
+        </button>
+        <button type="button" class="nav-link" data-tab="exams">
+          <span>📝</span>
+          <span>الامتحانات</span>
+        </button>
+        <button type="button" class="nav-link" data-tab="students">
+          <span>🎓</span>
+          <span>الطلاب</span>
+        </button>
+        <button type="button" class="nav-link" data-tab="results">
+          <span>🏆</span>
+          <span>نتائج الامتحانات</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <div class="avatar" id="admin-avatar">👑</div>
+          <div class="user-info">
+            <div class="user-name" id="admin-name">مدير النظام</div>
+            <div class="user-role">مسؤول الإدارة</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm btn-full" id="logout-btn" style="margin-top: 0.75rem;">
+          🚪 تسجيل الخروج
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <button type="button" class="hamburger-btn" id="sidebar-toggle" aria-label="القائمة">
+            ☰
+          </button>
+          <h1 class="topbar-title" id="page-title">لوحة التحكم والإحصائيات</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <span class="badge badge-primary" id="admin-email-badge">admin@exam.com</span>
+        </div>
+      </header>
+
+      <main class="content-body">
+
+        <!-- ================= TAB 1: DASHBOARD ================= -->
+        <section id="tab-dashboard" class="tab-pane">
+          <!-- 4 Primary Stat Cards -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" id="stat-students">0</span>
+                <span class="stat-label">إجمالي الطلاب</span>
+              </div>
+              <div class="stat-icon blue">🎓</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" id="stat-exams">0</span>
+                <span class="stat-label">إجمالي الامتحانات</span>
+              </div>
+              <div class="stat-icon green">📝</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" id="stat-attempts">0</span>
+                <span class="stat-label">المحاولات المكتملة</span>
+              </div>
+              <div class="stat-icon amber">⏱️</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" id="stat-avg-score">0%</span>
+                <span class="stat-label">متوسط درجات الطلاب</span>
+              </div>
+              <div class="stat-icon blue">📈</div>
+            </div>
+          </div>
+
+          <!-- 4 Secondary Stat Cards -->
+          <div class="stat-grid" style="margin-top: -0.75rem;">
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" style="color: var(--success);" id="stat-highest">0</span>
+                <span class="stat-label">أعلى درجة مسجلة</span>
+              </div>
+              <div class="stat-icon green">⭐</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" style="color: var(--danger);" id="stat-lowest">0</span>
+                <span class="stat-label">أدنى درجة مسجلة</span>
+              </div>
+              <div class="stat-icon red">📉</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" style="color: var(--success);" id="stat-pass-rate">0%</span>
+                <span class="stat-label">معدل النجاح الإجمالي</span>
+              </div>
+              <div class="stat-icon green">✅</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" style="color: var(--danger);" id="stat-fail-rate">0%</span>
+                <span class="stat-label">معدل الرسوب</span>
+              </div>
+              <div class="stat-icon red">❌</div>
+            </div>
+          </div>
+
+          <!-- Questions Performance Table (Least Successful First) -->
+          <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+              <h2 class="card-title">تحليل أداء الأسئلة (الأكثر صعوبة والأقل نجاحاً أولاً)</h2>
+              <span class="badge badge-gray" id="questions-analyzed-badge">0 سؤال</span>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>نص السؤال</th>
+                    <th>الامتحان</th>
+                    <th>إجمالي الإجابات</th>
+                    <th>الإجابات الصحيحة</th>
+                    <th style="min-width: 170px;">نسبة النجاح</th>
+                  </tr>
+                </thead>
+                <tbody id="question-performance-tbody">
+                  <tr><td colspan="5" style="text-align: center; color: var(--gray-500);">جاري تحميل البيانات...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Per-Exam Stats Table -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">إحصائيات تفصيلية حسب الامتحان</h2>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>عنوان الامتحان</th>
+                    <th>المادة</th>
+                    <th>عدد المحاولات</th>
+                    <th>متوسط الدرجات</th>
+                    <th>نسبة النجاح</th>
+                    <th>أعلى درجة</th>
+                    <th>أدنى درجة</th>
+                  </tr>
+                </thead>
+                <tbody id="exam-stats-tbody">
+                  <tr><td colspan="7" style="text-align: center; color: var(--gray-500);">جاري تحميل البيانات...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 2: EXAMS ================= -->
+        <section id="tab-exams" class="tab-pane" style="display: none;">
+          <div class="card">
+            <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <h2 class="card-title">قائمة الامتحانات</h2>
+                <select id="exam-filter-status" class="form-select" style="width: auto; padding: 0.4rem 0.8rem; font-size: 0.875rem;">
+                  <option value="all">كل الحالات</option>
+                  <option value="published">منشور (متاح للطلاب)</option>
+                  <option value="draft">مسودة</option>
+                  <option value="closed">مغلق</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn btn-primary" id="btn-create-exam">
+                ➕ إنشاء امتحان جديد
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>العنوان</th>
+                    <th>المادة</th>
+                    <th>عدد الأسئلة</th>
+                    <th>المدة</th>
+                    <th>درجة النجاح</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="exams-tbody">
+                  <tr><td colspan="7" style="text-align: center; color: var(--gray-500);">جاري تحميل الامتحانات...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 3: STUDENTS ================= -->
+        <section id="tab-students" class="tab-pane" style="display: none;">
+          <div class="card">
+            <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex: 1; max-width: 500px;">
+                <input
+                  type="text"
+                  id="student-search-input"
+                  class="form-control"
+                  placeholder="بحث بالاسم، كود الطالب، أو البريد..."
+                  style="padding: 0.45rem 0.85rem;"
+                >
+                <select id="student-filter-status" class="form-select" style="width: auto; padding: 0.45rem 0.85rem; font-size: 0.875rem;">
+                  <option value="all">الكل</option>
+                  <option value="active">نشط</option>
+                  <option value="inactive">معطل</option>
+                </select>
+              </div>
+
+              <button type="button" class="btn btn-primary" id="btn-add-student">
+                ➕ إضافة طالب جديد
+              </button>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>الاسم</th>
+                    <th>كود الطالب</th>
+                    <th>البريد الإلكتروني</th>
+                    <th>الصف / الشعبة</th>
+                    <th>الحالة</th>
+                    <th>تاريخ التسجيل</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="students-tbody">
+                  <tr><td colspan="7" style="text-align: center; color: var(--gray-500);">جاري تحميل الطلاب...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 4: RESULTS ================= -->
+        <section id="tab-results" class="tab-pane" style="display: none;">
+          <div class="card">
+            <div class="card-header" style="flex-wrap: wrap; gap: 1rem;">
+              <div style="display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap;">
+                <input
+                  type="text"
+                  id="result-search-input"
+                  class="form-control"
+                  placeholder="بحث باسم الطالب أو الامتحان..."
+                  style="width: 250px; padding: 0.45rem 0.85rem;"
+                >
+                <select id="result-filter-exam" class="form-select" style="width: auto; padding: 0.45rem 0.85rem; font-size: 0.875rem;">
+                  <option value="all">كل الامتحانات</option>
+                </select>
+                <select id="result-filter-status" class="form-select" style="width: auto; padding: 0.45rem 0.85rem; font-size: 0.875rem;">
+                  <option value="all">كل النتائج</option>
+                  <option value="passed">ناجح فقط</option>
+                  <option value="failed">راسب فقط</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>الطالب</th>
+                    <th>كود الطالب</th>
+                    <th>الامتحان</th>
+                    <th>وقت التسليم</th>
+                    <th>المدة المستغرقة</th>
+                    <th>الدرجة</th>
+                    <th>النسبة</th>
+                    <th>الحالة</th>
+                    <th>الإجراءات</th>
+                  </tr>
+                </thead>
+                <tbody id="results-tbody">
+                  <tr><td colspan="9" style="text-align: center; color: var(--gray-500);">جاري تحميل النتائج...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- ================= MODALS ================= -->
+
+  <!-- 1. Exam Create/Edit Modal -->
+  <div id="exam-modal" class="modal-overlay">
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="exam-modal-title">إنشاء امتحان جديد</h3>
+        <button type="button" class="modal-close" onclick="closeModal('exam-modal')">&times;</button>
+      </div>
+      <form id="exam-form">
+        <div class="modal-body">
+          <input type="hidden" id="exam-id">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="exam-title-input">عنوان الامتحان *</label>
+              <input type="text" id="exam-title-input" class="form-control" required placeholder="مثال: امتحان مادة الرياضيات النهائي">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exam-subject-input">المادة</label>
+              <input type="text" id="exam-subject-input" class="form-control" placeholder="مثال: رياضيات">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="exam-desc-input">وصف الامتحان أو التعليمات</label>
+            <textarea id="exam-desc-input" class="form-control form-textarea" placeholder="اكتب تعليمات الامتحان للطلاب هنا..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="exam-duration-input">مدة الامتحان (بالدقائق)</label>
+              <input type="number" id="exam-duration-input" class="form-control" min="1" value="30" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exam-passing-input">درجة النجاح</label>
+              <input type="number" id="exam-passing-input" class="form-control" min="1" step="0.5" value="10" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exam-max-attempts-input">الحد الأقصى للمحاولات</label>
+              <input type="number" id="exam-max-attempts-input" class="form-control" min="1" value="1" required>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="exam-status-input">حالة الامتحان</label>
+              <select id="exam-status-input" class="form-select">
+                <option value="draft">مسودة (غير مرئي للطلاب)</option>
+                <option value="published">منشور (متاح للطلاب)</option>
+                <option value="closed">مغلق (منتهي)</option>
+              </select>
+            </div>
+          </div>
+
+          <div style="background: var(--gray-50); padding: 1rem; border-radius: var(--radius-md); border: 1px solid var(--gray-200); margin-top: 0.5rem;">
+            <div style="font-weight: 700; margin-bottom: 0.75rem; color: var(--gray-800);">خيارات إضافية:</div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+              <label class="form-check">
+                <input type="checkbox" id="exam-show-result" checked>
+                <span>إظهار النتيجة فور التسليم</span>
+              </label>
+              <label class="form-check">
+                <input type="checkbox" id="exam-show-correct" checked>
+                <span>إظهار الإجابات الصحيحة للطالب</span>
+              </label>
+              <label class="form-check">
+                <input type="checkbox" id="exam-random-questions">
+                <span>ترتيب عشوائي للأسئلة</span>
+              </label>
+              <label class="form-check">
+                <input type="checkbox" id="exam-random-answers">
+                <span>ترتيب عشوائي للخيارات</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('exam-modal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="save-exam-btn">حفظ الامتحان</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 2. Exam Detail Modal (PDF + Questions Management) -->
+  <div id="exam-detail-modal" class="modal-overlay">
+    <div class="modal-container modal-lg" style="max-width: 950px;">
+      <div class="modal-header">
+        <div>
+          <h3 class="modal-title" id="detail-modal-exam-title">تفاصيل الامتحان</h3>
+          <span style="font-size: 0.85rem; color: var(--gray-500);" id="detail-modal-exam-meta"></span>
+        </div>
+        <button type="button" class="modal-close" onclick="closeModal('exam-detail-modal')">&times;</button>
+      </div>
+
+      <div class="modal-body">
+        <!-- PDF Section -->
+        <div class="card" style="margin-bottom: 1.5rem; background: #fafafa;">
+          <div class="card-header">
+            <h4 style="font-size: 1rem; font-weight: 700;">📂 ملفات PDF الخاصة بالامتحان</h4>
+            <label class="btn btn-sm btn-outline-primary" style="cursor: pointer;">
+              <span>📤 رفع ملف PDF جديد</span>
+              <input type="file" id="pdf-file-input" accept=".pdf,application/pdf" style="display: none;">
+            </label>
+          </div>
+          <div id="pdf-list-container">
+            <p style="font-size: 0.9rem; color: var(--gray-500);">لا توجد ملفات PDF مرفوعة لهذا الامتحان.</p>
+          </div>
+        </div>
+
+        <!-- Questions Section -->
+        <div class="card">
+          <div class="card-header" style="flex-wrap: wrap; gap: 0.75rem;">
+            <div style="display: flex; align-items: center; gap: 0.5rem;">
+              <h4 style="font-size: 1.05rem; font-weight: 700;">❓ بنك أسئلة الامتحان</h4>
+              <span class="badge badge-primary" id="detail-questions-count">0 سؤال</span>
+            </div>
+
+            <div style="display: flex; gap: 0.5rem;">
+              <button type="button" class="btn btn-sm btn-outline" id="btn-open-json-modal">
+                📋 JSON (استيراد / تصدير)
+              </button>
+              <button type="button" class="btn btn-sm btn-primary" id="btn-add-question">
+                ➕ إضافة سؤال
+              </button>
+            </div>
+          </div>
+
+          <div id="detail-questions-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+            <p style="text-align: center; color: var(--gray-500); padding: 1.5rem;">لا توجد أسئلة مضافة بعد. أضف أسئلة يدويًا أو عبر ملف PDF أو JSON.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('exam-detail-modal')">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Question Add/Edit Modal -->
+  <div id="question-modal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="question-modal-title">إضافة سؤال جديد</h3>
+        <button type="button" class="modal-close" onclick="closeModal('question-modal')">&times;</button>
+      </div>
+      <form id="question-form">
+        <div class="modal-body">
+          <input type="hidden" id="q-id">
+
+          <div class="form-group">
+            <label class="form-label" for="q-text">نص السؤال *</label>
+            <textarea id="q-text" class="form-control form-textarea" required placeholder="اكتب نص السؤال بوضوح..."></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="q-opt-a">الخيار (A) *</label>
+              <input type="text" id="q-opt-a" class="form-control" required placeholder="الخيار الأول">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="q-opt-b">الخيار (B) *</label>
+              <input type="text" id="q-opt-b" class="form-control" required placeholder="الخيار الثاني">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="q-opt-c">الخيار (C) (اختياري)</label>
+              <input type="text" id="q-opt-c" class="form-control" placeholder="الخيار الثالث">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="q-opt-d">الخيار (D) (اختياري)</label>
+              <input type="text" id="q-opt-d" class="form-control" placeholder="الخيار الرابع">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="q-correct">الإجابة الصحيحة *</label>
+              <select id="q-correct" class="form-select" required>
+                <option value="A">الخيار (A)</option>
+                <option value="B">الخيار (B)</option>
+                <option value="C">الخيار (C)</option>
+                <option value="D">الخيار (D)</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="q-marks">الدرجة المخصصة للسؤال</label>
+              <input type="number" id="q-marks" class="form-control" min="0.5" step="0.5" value="1" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('question-modal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="save-question-btn">حفظ السؤال</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 4. JSON Import/Export Modal -->
+  <div id="json-modal" class="modal-overlay">
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title">📋 استيراد وتصدير الأسئلة كـ JSON</h3>
+        <button type="button" class="modal-close" onclick="closeModal('json-modal')">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div style="display: flex; gap: 0.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+          <button type="button" class="btn btn-sm btn-outline" id="btn-load-json-template">
+            📥 تحميل نموذج أمثلة
+          </button>
+          <button type="button" class="btn btn-sm btn-outline" id="btn-export-json">
+            📤 تصدير الأسئلة الحالية
+          </button>
+          <label class="form-check" style="margin-right: auto;">
+            <input type="checkbox" id="json-replace-mode">
+            <span style="font-weight: 700; color: var(--danger);">وضع الاستبدال (حذف الأسئلة الحالية قبل الاستيراد)</span>
+          </label>
+        </div>
+
+        <div class="form-group">
+          <textarea
+            id="json-textarea"
+            class="form-control form-textarea"
+            style="min-height: 250px; font-family: monospace; font-size: 0.875rem;"
+            placeholder="الصق بيانات JSON هنا أو اضغط 'تحميل نموذج'..."
+          ></textarea>
+        </div>
+
+        <!-- Live Validation Box -->
+        <div id="json-validation-box" style="padding: 0.75rem 1rem; border-radius: var(--radius-md); font-weight: 600; font-size: 0.9rem; background: var(--gray-100); color: var(--gray-700);">
+          الصق كود JSON لرؤية نتيجة الفحص الفوري.
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('json-modal')">إلغاء</button>
+        <button type="button" class="btn btn-success" id="btn-submit-json-import">
+          ✅ استيراد الأسئلة
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Student Add/Edit Modal -->
+  <div id="student-modal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title" id="student-modal-title">إضافة طالب جديد</h3>
+        <button type="button" class="modal-close" onclick="closeModal('student-modal')">&times;</button>
+      </div>
+      <form id="student-form">
+        <div class="modal-body">
+          <input type="hidden" id="student-id">
+
+          <div class="form-group">
+            <label class="form-label" for="student-name">اسم الطالب بالكامل *</label>
+            <input type="text" id="student-name" class="form-control" required placeholder="مثال: أحمد محمد علي">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="student-code">كود الطالب / رقم الجلوس *</label>
+              <input type="text" id="student-code" class="form-control" required placeholder="مثال: ST002">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-class">الصف / الشعبة</label>
+              <input type="text" id="student-class" class="form-control" placeholder="مثال: الصف الأول الثانوي">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="student-email">البريد الإلكتروني *</label>
+              <input type="email" id="student-email" class="form-control" required placeholder="student@example.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="student-password">كلمة المرور <span id="pass-hint" style="font-size: 0.8rem; color: var(--gray-500);">(مطلوبة في الإنشاء)</span></label>
+              <input type="password" id="student-password" class="form-control" placeholder="••••••••">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="student-status">حالة الحساب</label>
+            <select id="student-status" class="form-select">
+              <option value="active">نشط (يمكنه دخول المنصة)</option>
+              <option value="inactive">معطل</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="closeModal('student-modal')">إلغاء</button>
+          <button type="submit" class="btn btn-primary" id="save-student-btn">حفظ الطالب</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- 6. Result Detail Modal -->
+  <div id="result-detail-modal" class="modal-overlay">
+    <div class="modal-container modal-lg">
+      <div class="modal-header">
+        <h3 class="modal-title" id="res-detail-title">تفاصيل نتيجة الطالب</h3>
+        <button type="button" class="modal-close" onclick="closeModal('result-detail-modal')">&times;</button>
+      </div>
+
+      <div class="modal-body" id="res-detail-body">
+        <div style="text-align: center; color: var(--gray-500); padding: 2rem;">جاري تحميل تفاصيل النتيجة...</div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeModal('result-detail-modal')">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <div id="loading-overlay" class="loading-overlay"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

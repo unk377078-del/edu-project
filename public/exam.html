@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>أداء الامتحان | منصة الامتحانات</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20100%22><text y=%22.9em%22 font-size=%2290%22>⏱️</text></svg>">
+</head>
+<body class="exam-layout">
+
+  <!-- Sticky Topbar -->
+  <header class="exam-topbar">
+    <div class="exam-title-badge">
+      <span>📝</span>
+      <span id="exam-title">جاري تحميل الامتحان...</span>
+    </div>
+
+    <!-- Countdown Timer -->
+    <div class="exam-timer normal" id="timer-box">
+      <span>⏳</span>
+      <span id="timer-display">00:00</span>
+    </div>
+
+    <div>
+      <button type="button" class="btn btn-success" id="btn-top-submit">
+        ✅ تسليم الامتحان
+      </button>
+    </div>
+  </header>
+
+  <!-- Exam Container -->
+  <main class="exam-body">
+
+    <!-- Progress Dots Navigator -->
+    <div class="progress-dots" id="progress-dots-container">
+      <!-- Dots populated dynamically -->
+    </div>
+
+    <!-- Active Question Card -->
+    <div class="question-card" id="question-card">
+      <div class="question-meta">
+        <span id="q-counter">سؤال 1 من 1</span>
+        <span id="q-marks-badge" class="badge badge-primary">1 درجة</span>
+      </div>
+
+      <div class="question-text" id="question-text">
+        جاري تحميل نص السؤال...
+      </div>
+
+      <div class="options-list" id="options-container">
+        <!-- Clickable Option Cards populated dynamically -->
+      </div>
+
+      <!-- Navigation & Submit -->
+      <div class="exam-nav">
+        <button type="button" class="btn btn-outline" id="btn-prev-q">
+          ➡️ السؤال السابق
+        </button>
+
+        <div style="display: flex; gap: 0.75rem;">
+          <button type="button" class="btn btn-primary" id="btn-next-q">
+            السؤال التالي ⬅️
+          </button>
+          <button type="button" class="btn btn-success" id="btn-final-submit">
+            إنهاء وتسليم
+          </button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Submit Confirmation Modal -->
+  <div id="submit-confirm-modal" class="modal-overlay">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h3 class="modal-title">تأكيد تسليم الامتحان</h3>
+        <button type="button" class="modal-close" onclick="closeModal('submit-confirm-modal')">&times;</button>
+      </div>
+
+      <div class="modal-body" style="text-align: center; padding: 2rem 1.5rem;">
+        <div style="font-size: 3rem; margin-bottom: 0.75rem;">⚠️</div>
+        <h4 style="font-size: 1.25rem; font-weight: 800; color: var(--gray-900); margin-bottom: 0.75rem;">
+          هل أنت متأكد من رغبتك في تسليم الامتحان؟
+        </h4>
+        <p style="color: var(--gray-600); margin-bottom: 1.25rem;" id="submit-summary-text">
+          بعد التسليم لن تتمكن من مراجعة أو تغيير أي إجابة.
+        </p>
+
+        <div id="unanswered-warning-box" style="display: none; background: var(--warning-light); border: 1px solid var(--warning-border); padding: 0.85rem; border-radius: var(--radius-md); color: var(--warning); font-weight: 700; margin-bottom: 1.25rem;">
+          ⚠️ تنبيه: لديك أسئلة لم تقم بالإجابة عليها بعد!
+        </div>
+      </div>
+
+      <div class="modal-footer" style="justify-content: center;">
+        <button type="button" class="btn btn-outline" onclick="closeModal('submit-confirm-modal')">
+          متابعة الحل
+        </button>
+        <button type="button" class="btn btn-success btn-lg" id="confirm-submit-btn">
+          نعم، سلّم الامتحان الآن
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <div id="loading-overlay" class="loading-overlay"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/exam.js"></script>
+</body>
+</html>

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بوابة الطالب | منصة الامتحانات</title>
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20100%22><text y=%22.9em%22 font-size=%2290%22>🎓</text></svg>">
+</head>
+<body>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-brand">
+          <span class="sidebar-brand-icon">📚</span>
+          <span>بوابة الطالب</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <button type="button" class="nav-link active" data-tab="home">
+          <span>🏠</span>
+          <span>الرئيسية</span>
+        </button>
+        <button type="button" class="nav-link" data-tab="exams">
+          <span>📝</span>
+          <span>الامتحانات المتاحة</span>
+        </button>
+        <button type="button" class="nav-link" data-tab="results">
+          <span>🏆</span>
+          <span>نتائجي وشهاداتي</span>
+        </button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-profile-badge">
+          <div class="avatar" id="student-avatar">🎓</div>
+          <div class="user-info">
+            <div class="user-name" id="student-name">الطالب</div>
+            <div class="user-role" id="student-code-role">كود الطالب: -</div>
+          </div>
+        </div>
+        <button type="button" class="btn btn-outline btn-sm btn-full" id="logout-btn" style="margin-top: 0.75rem;">
+          🚪 تسجيل الخروج
+        </button>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <header class="topbar">
+        <div style="display: flex; align-items: center; gap: 0.75rem;">
+          <button type="button" class="hamburger-btn" id="sidebar-toggle" aria-label="القائمة">
+            ☰
+          </button>
+          <h1 class="topbar-title" id="page-title">الصفحة الرئيسية</h1>
+        </div>
+
+        <div class="topbar-actions">
+          <span class="badge badge-primary" id="student-class-badge">الصف الأول</span>
+        </div>
+      </header>
+
+      <main class="content-body">
+
+        <!-- ================= TAB 1: HOME ================= -->
+        <section id="tab-home" class="tab-pane">
+          <!-- Welcome Banner -->
+          <div style="background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%); color: #ffffff; border-radius: var(--radius-lg); padding: 2rem; box-shadow: var(--shadow-md); margin-bottom: 2rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
+            <div>
+              <h2 style="font-size: 1.85rem; font-weight: 800; color: #ffffff;" id="welcome-name">أهلاً بك، 👋</h2>
+              <p style="opacity: 0.9; margin-top: 0.5rem; font-size: 1.05rem;" id="welcome-sub">نتمنى لك التوفيق والنجاح في جميع اختباراتك اليوم.</p>
+            </div>
+            <div style="background: rgba(255, 255, 255, 0.15); backdrop-filter: blur(8px); padding: 0.75rem 1.25rem; border-radius: var(--radius-md); border: 1px solid rgba(255, 255, 255, 0.2);">
+              <div style="font-size: 0.85rem; opacity: 0.85;">رقم الجلوس / كود الطالب:</div>
+              <div style="font-size: 1.25rem; font-weight: 800; letter-spacing: 1px;" id="welcome-code">-</div>
+            </div>
+          </div>
+
+          <!-- 4 Stat Cards -->
+          <div class="stat-grid">
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" id="home-stat-available">0</span>
+                <span class="stat-label">امتحانات متاحة الآن</span>
+              </div>
+              <div class="stat-icon blue">📝</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" style="color: var(--success);" id="home-stat-passed">0</span>
+                <span class="stat-label">امتحانات تم اجتيازها</span>
+              </div>
+              <div class="stat-icon green">✅</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" style="color: var(--danger);" id="home-stat-failed">0</span>
+                <span class="stat-label">امتحانات لم تجتزها</span>
+              </div>
+              <div class="stat-icon red">❌</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-info">
+                <span class="stat-value" id="home-stat-avg">0%</span>
+                <span class="stat-label">متوسط درجاتي</span>
+              </div>
+              <div class="stat-icon amber">⭐</div>
+            </div>
+          </div>
+
+          <!-- Available Exams Quick List -->
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">الامتحانات المتاحة للتقديم</h2>
+              <button type="button" class="btn btn-sm btn-outline" onclick="goToTab('exams')">عرض الكل ⬅️</button>
+            </div>
+            <div id="home-exams-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+              <p style="color: var(--gray-500); text-align: center; grid-column: 1/-1; padding: 1.5rem;">جاري تحميل الامتحانات...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 2: EXAMS ================= -->
+        <section id="tab-exams" class="tab-pane" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">قائمة كافة الامتحانات المتاحة</h2>
+            </div>
+            <div id="all-exams-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+              <p style="color: var(--gray-500); text-align: center; grid-column: 1/-1; padding: 2rem;">جاري تحميل الامتحانات...</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 3: RESULTS ================= -->
+        <section id="tab-results" class="tab-pane" style="display: none;">
+          <div class="card">
+            <div class="card-header">
+              <h2 class="card-title">سجل نتائجي السابقة</h2>
+            </div>
+            <div class="table-responsive">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>عنوان الامتحان</th>
+                    <th>المادة</th>
+                    <th>تاريخ التسليم</th>
+                    <th>المدة المستغرقة</th>
+                    <th>الدرجة</th>
+                    <th>النسبة المئوية</th>
+                    <th>الحالة</th>
+                    <th>الإجراء</th>
+                  </tr>
+                </thead>
+                <tbody id="student-results-tbody">
+                  <tr><td colspan="8" style="text-align: center; color: var(--gray-500); padding: 2rem;">جاري تحميل النتائج...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <div id="toast-container" class="toast-container"></div>
+  <div id="loading-overlay" class="loading-overlay"></div>
+
+  <script src="js/app.js"></script>
+  <script src="js/student.js"></script>
+</body>
+</html>
