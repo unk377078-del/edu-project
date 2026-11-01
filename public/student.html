@@ -17,6 +17,7 @@
           <span class="sidebar-brand-icon">📚</span>
           <span>بوابة الطالب</span>
         </div>
+        <button type="button" class="sidebar-close-btn" id="sidebar-close-btn" aria-label="إغلاق">&times;</button>
       </div>
 
       <nav class="sidebar-nav">
@@ -117,7 +118,7 @@
               <h2 class="card-title">الامتحانات المتاحة للتقديم</h2>
               <button type="button" class="btn btn-sm btn-outline" onclick="goToTab('exams')">عرض الكل ⬅️</button>
             </div>
-            <div id="home-exams-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+            <div id="home-exams-list" class="exam-grid">
               <p style="color: var(--gray-500); text-align: center; grid-column: 1/-1; padding: 1.5rem;">جاري تحميل الامتحانات...</p>
             </div>
           </div>
@@ -129,7 +130,7 @@
             <div class="card-header">
               <h2 class="card-title">قائمة كافة الامتحانات المتاحة</h2>
             </div>
-            <div id="all-exams-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem;">
+            <div id="all-exams-list" class="exam-grid">
               <p style="color: var(--gray-500); text-align: center; grid-column: 1/-1; padding: 2rem;">جاري تحميل الامتحانات...</p>
             </div>
           </div>
