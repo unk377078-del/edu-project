@@ -207,16 +207,68 @@ function formatDate(isoString) {
 function initSidebarToggle() {
   const toggleBtn = document.getElementById('sidebar-toggle');
   const sidebar = document.querySelector('.sidebar');
-  if (toggleBtn && sidebar) {
+  if (!sidebar) return;
+
+  // Create backdrop if not existing
+  let backdrop = document.querySelector('.sidebar-backdrop');
+  if (!backdrop) {
+    backdrop = document.createElement('div');
+    backdrop.className = 'sidebar-backdrop';
+    document.body.appendChild(backdrop);
+  }
+
+  const closeSidebar = () => {
+    sidebar.classList.remove('open');
+    backdrop.classList.remove('active');
+    document.body.classList.remove('sidebar-is-open');
+  };
+
+  const openSidebar = () => {
+    sidebar.classList.add('open');
+    backdrop.classList.add('active');
+    document.body.classList.add('sidebar-is-open');
+  };
+
+  if (toggleBtn) {
     toggleBtn.addEventListener('click', (e) => {
       e.stopPropagation();
-      sidebar.classList.toggle('open');
-    });
-
-    document.addEventListener('click', (e) => {
-      if (sidebar.classList.contains('open') && !sidebar.contains(e.target) && e.target !== toggleBtn) {
-        sidebar.classList.remove('open');
+      if (sidebar.classList.contains('open')) {
+        closeSidebar();
+      } else {
+        openSidebar();
       }
     });
   }
+
+  // Close button inside sidebar
+  const closeBtn = document.getElementById('sidebar-close-btn');
+  if (closeBtn) {
+    closeBtn.addEventListener('click', closeSidebar);
+  }
+
+  // Backdrop click closes sidebar
+  backdrop.addEventListener('click', closeSidebar);
+
+  // Close on nav link or logout click in mobile view
+  sidebar.querySelectorAll('.nav-link, #logout-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      if (window.innerWidth <= 992) {
+        closeSidebar();
+      }
+    });
+  });
+
+  // Close on Escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+      closeSidebar();
+    }
+  });
+
+  // Handle screen resize
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 992 && sidebar.classList.contains('open')) {
+      closeSidebar();
+    }
+  });
 }
