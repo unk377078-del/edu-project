@@ -3,6 +3,7 @@ import crypto from 'crypto';
 import { supabase } from '@/lib/supabase';
 import { verifyPassword, createSession, getSessionCookieHeader, hashPassword } from '@/lib/auth';
 import { ensureSeeded } from '@/lib/seed';
+import { getSystemSettings } from '@/lib/settings';
 
 export async function POST(req: Request) {
   try {
@@ -85,6 +86,17 @@ export async function POST(req: Request) {
       email = (existingStudent.user as any)?.email || `student_${phone}@exam.internal`;
       await supabase.from('users').update({ name }).eq('id', userId);
     } else {
+      const settings = await getSystemSettings();
+      if (!settings.allowPasswordlessLogin) {
+        return NextResponse.json(
+          {
+            ok: false,
+            error: 'خاصية الدخول المباشر بدون تسجيل مسبق غير مفعلة حالياً من قبل الإدارة. يرجى التواصل مع المشرف.',
+          },
+          { status: 403 }
+        );
+      }
+
       const randSuffix = crypto.randomBytes(3).toString('hex');
       email = `student_${phone}_${randSuffix}@exam.internal`;
       const dummyPasswordHash = await hashPassword(crypto.randomBytes(16).toString('hex'));
