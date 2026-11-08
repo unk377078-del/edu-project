@@ -38,6 +38,9 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   // Setup JSON Import/Export
   initJsonSection();
+
+  // Setup Settings Section
+  initSettingsSection();
 });
 
 /* ============================================================
@@ -53,6 +56,7 @@ function initTabNavigation() {
     exams: 'إدارة الامتحانات وبنك الأسئلة',
     students: 'إدارة الطلاب والحسابات',
     results: 'سجل نتائج وتقييمات الطلاب',
+    settings: 'إعدادات المنصة والدخول',
   };
 
   navLinks.forEach((link) => {
@@ -73,6 +77,7 @@ function initTabNavigation() {
       if (tabId === 'exams') loadExams();
       if (tabId === 'students') loadStudents();
       if (tabId === 'results') loadResults();
+      if (tabId === 'settings') loadAdminSettings();
     });
   });
 }
@@ -1062,4 +1067,85 @@ function escapeHtml(str) {
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
     .replace(/'/g, '&#039;');
+}
+
+/* ============================================================
+   Platform Settings Section
+   ============================================================ */
+async function loadAdminSettings() {
+  try {
+    showLoading('جاري تحميل الإعدادات...');
+    const res = await api('/api/settings');
+    const toggle = document.getElementById('toggle-passwordless-setting');
+    if (toggle && res.settings) {
+      toggle.checked = Boolean(res.settings.allowPasswordlessLogin);
+      updatePasswordlessToggleUI(toggle.checked);
+    }
+  } catch (err) {
+    showToast(err.message || 'فشل تحميل الإعدادات', 'error');
+  } finally {
+    hideLoading();
+  }
+}
+
+function updatePasswordlessToggleUI(isChecked) {
+  const label = document.getElementById('passwordless-toggle-label');
+  if (label) {
+    if (isChecked) {
+      label.textContent = 'مفعّل الآن 🟢';
+      label.style.color = 'var(--success)';
+    } else {
+      label.textContent = 'معطّل ❌';
+      label.style.color = 'var(--gray-500)';
+    }
+  }
+}
+
+function initSettingsSection() {
+  const toggle = document.getElementById('toggle-passwordless-setting');
+  const saveBtn = document.getElementById('btn-save-settings');
+
+  if (toggle) {
+    toggle.addEventListener('change', () => {
+      updatePasswordlessToggleUI(toggle.checked);
+    });
+  }
+
+  if (saveBtn) {
+    saveBtn.addEventListener('click', async () => {
+      try {
+        saveBtn.disabled = true;
+        saveBtn.textContent = 'جاري الحفظ...';
+        const allowPasswordlessLogin = toggle ? toggle.checked : false;
+
+        const res = await api('/api/settings', {
+          method: 'POST',
+          body: JSON.stringify({ allowPasswordlessLogin }),
+        });
+
+        if (res.ok) {
+          showToast(
+            allowPasswordlessLogin
+              ? 'تم تفعيل دخول الطلاب بدون كلمة مرور بنجاح 🟢'
+              : 'تم تعطيل دخول الطلاب بدون كلمة مرور ❌',
+            'success'
+          );
+          const alertEl = document.getElementById('settings-save-alert');
+          if (alertEl) {
+            alertEl.style.display = 'block';
+            setTimeout(() => {
+              alertEl.style.display = 'none';
+            }, 4000);
+          }
+        } else {
+          showToast(res.error || 'فشل حفظ الإعدادات', 'error');
+        }
+      } catch (err) {
+        showToast(err.message || 'حدث خطأ أثناء الحفظ', 'error');
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.textContent = '💾 حفظ التغييرات الآن';
+      }
+    });
+  }
 }
