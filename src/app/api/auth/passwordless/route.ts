@@ -16,8 +16,11 @@ export async function POST(req: Request) {
 
     const body = await req.json();
     const name = String(body.name || '').trim();
-    const className = String(body.className || '').trim() || 'عام';
-    let studentCode = String(body.studentCode || '').trim().toUpperCase();
+    // Normalize phone number: convert Arabic digits (٠-٩) and remove any spaces/dashes
+    const phone = String(body.phone || body.studentCode || '')
+      .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d).toString())
+      .replace(/[\s\-\+]/g, '')
+      .trim();
 
     if (!name || name.length < 2) {
       return NextResponse.json(
@@ -26,13 +29,17 @@ export async function POST(req: Request) {
       );
     }
 
-    // If student code not provided, generate random one
-    if (!studentCode) {
-      const rand = Math.floor(1000 + Math.random() * 9000);
-      studentCode = `ST-${rand}`;
+    if (!phone || phone.length < 6) {
+      return NextResponse.json(
+        { ok: false, error: 'يرجى إدخال رقم هاتف صحيح (6 أرقام على الأقل)' },
+        { status: 400 }
+      );
     }
 
-    // Check if studentCode already exists
+    // Use phone number directly as student_code
+    const studentCode = phone;
+
+    // Check if student with this phone number already exists
     const { data: existingStudent } = await supabase
       .from('students')
       .select('id, student_code, user_id, user:users(id, name, email)')
@@ -46,12 +53,12 @@ export async function POST(req: Request) {
     if (existingStudent && existingStudent.user_id) {
       userId = existingStudent.user_id;
       studentId = existingStudent.id;
-      email = (existingStudent.user as any)?.email || `student_${studentCode.toLowerCase()}@exam.internal`;
+      email = (existingStudent.user as any)?.email || `phone_${phone}@guest.exam`;
       // Update name to what was entered
       await supabase.from('users').update({ name }).eq('id', userId);
     } else {
       const randSuffix = crypto.randomBytes(3).toString('hex');
-      email = `guest_${Date.now()}_${randSuffix}@exam.internal`;
+      email = `phone_${phone}_${randSuffix}@guest.exam`;
       const dummyPasswordHash = await hashPassword(crypto.randomBytes(16).toString('hex'));
 
       const { data: newUser, error: userErr } = await supabase
@@ -77,7 +84,7 @@ export async function POST(req: Request) {
         .insert({
           user_id: userId,
           student_code: studentCode,
-          class_name: className,
+          class_name: 'طالب زائر (هاتف: ' + phone + ')',
           status: 'active',
         })
         .select()
@@ -101,7 +108,7 @@ export async function POST(req: Request) {
       role: 'student',
       studentId,
       studentCode,
-      className,
+      className: 'طالب زائر',
       status: 'active',
       isGuest: true,
     };
