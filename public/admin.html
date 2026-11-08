@@ -37,6 +37,10 @@
           <span>🏆</span>
           <span>نتائج الامتحانات</span>
         </button>
+        <button type="button" class="nav-link" data-tab="settings">
+          <span>⚙️</span>
+          <span>إعدادات المنصة</span>
+        </button>
       </nav>
 
       <div class="sidebar-footer">
@@ -313,6 +317,55 @@
                   <tr><td colspan="9" style="text-align: center; color: var(--gray-500);">جاري تحميل النتائج...</td></tr>
                 </tbody>
               </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================= TAB 5: SETTINGS ================= -->
+        <section id="tab-settings" class="tab-pane" style="display: none;">
+          <div class="card" style="max-width: 800px; margin: 0 auto;">
+            <div class="card-header">
+              <h2 class="card-title">⚙️ إعدادات المنصة والدخول</h2>
+              <span class="badge badge-primary" id="settings-status-badge">إعدادات النظام</span>
+            </div>
+
+            <div style="padding: 0.5rem 0;">
+              <!-- Passwordless Toggle Card -->
+              <div style="background: var(--gray-50); border: 2px solid var(--primary-border); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; flex-wrap: wrap;">
+                  <div style="flex: 1; min-width: 250px;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                      <span style="font-size: 1.5rem;">🔓</span>
+                      <h3 style="font-size: 1.2rem; font-weight: 800; color: var(--gray-900);">دخول الطلاب بدون كلمة مرور (بدون تسجيل)</h3>
+                    </div>
+                    <p style="color: var(--gray-600); font-size: 0.95rem; line-height: 1.6;">
+                      عند تفعيل هذه الخاصية، سيتمكن الطلاب من كتابة أسمائهم فقط في صفحة الدخول والبدء مباشرة في أداء الامتحانات بدون الحاجة لإنشاء حساب مسبق أو إدخال بريد إلكتروني وكلمة مرور.
+                    </p>
+                    <div style="margin-top: 0.75rem; font-size: 0.85rem; color: var(--gray-500);">
+                      💡 يمكنك تفعيلها وقت بدء الامتحان وإلغاء تفعيلها فور انتهاء موعد الاختبار بضغطة زر واحدة من هنا.
+                    </div>
+                  </div>
+
+                  <!-- Switch / Toggle -->
+                  <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                    <label class="switch-toggle">
+                      <input type="checkbox" id="toggle-passwordless-setting">
+                      <span class="slider"></span>
+                    </label>
+                    <span id="passwordless-toggle-label" style="font-weight: 800; font-size: 0.9rem; color: var(--gray-500);">معطّل ❌</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Save / Status Bar -->
+              <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                <div id="settings-save-alert" style="font-weight: 700; font-size: 0.95rem; color: var(--success); display: none;">
+                  ✅ تم حفظ الإعدادات وتطبيقها سحابياً فوراً!
+                </div>
+                <button type="button" class="btn btn-primary btn-lg" id="btn-save-settings" style="min-width: 180px;">
+                  💾 حفظ التغييرات الآن
+                </button>
+              </div>
             </div>
           </div>
         </section>
