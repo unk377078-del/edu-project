@@ -63,26 +63,21 @@
             class="form-control"
             placeholder="مثال: أحمد محمد علي"
             required
-          >
-        </div>
-
-        <div class="form-group" style="text-align: right;">
-          <label class="form-label" for="guest-code">رقم الجلوس أو الكود <span style="font-size: 0.75rem; color: var(--gray-500);">(اختياري)</span></label>
-          <input
-            type="text"
-            id="guest-code"
-            class="form-control"
-            placeholder="مثال: ST005"
+            autocomplete="name"
           >
         </div>
 
         <div class="form-group" style="text-align: right; margin-bottom: 1.25rem;">
-          <label class="form-label" for="guest-class">الصف / الشعبة <span style="font-size: 0.75rem; color: var(--gray-500);">(اختياري)</span></label>
+          <label class="form-label" for="guest-phone">رقم الهاتف / الموبايل *</label>
           <input
-            type="text"
-            id="guest-class"
+            type="tel"
+            id="guest-phone"
             class="form-control"
-            placeholder="مثال: الصف الأول الثانوي"
+            placeholder="مثال: 01012345678"
+            required
+            dir="ltr"
+            style="text-align: right;"
+            autocomplete="tel"
           >
         </div>
 
