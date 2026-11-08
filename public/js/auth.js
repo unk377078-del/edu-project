@@ -39,9 +39,17 @@ document.addEventListener('DOMContentLoaded', async () => {
   const toggleGuestBtn = document.getElementById('btn-toggle-passwordless');
   const guestForm = document.getElementById('passwordless-form');
   const guestNameInput = document.getElementById('guest-name');
-  const guestCodeInput = document.getElementById('guest-code');
-  const guestClassInput = document.getElementById('guest-class');
+  const guestPhoneInput = document.getElementById('guest-phone');
   const guestSubmitBtn = document.getElementById('guest-submit-btn');
+
+  // Convert Arabic numbers (٠١٢٣٤٥٦٧٨٩) to standard English digits
+  function cleanPhone(val) {
+    if (!val) return '';
+    return String(val)
+      .replace(/[٠-٩]/g, (d) => '٠١٢٣٤٥٦٧٨٩'.indexOf(d).toString())
+      .replace(/[\s\-\+]/g, '')
+      .trim();
+  }
 
   if (toggleGuestBtn && guestForm) {
     toggleGuestBtn.addEventListener('click', () => {
@@ -52,7 +60,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         guestNameInput.focus();
       } else {
         guestForm.style.display = 'none';
-        toggleGuestBtn.textContent = '🎓 دخول سريع باسم الطالب فقط';
+        toggleGuestBtn.textContent = '🎓 دخول سريع بالاسم ورقم الهاتف';
       }
     });
   }
@@ -62,11 +70,17 @@ document.addEventListener('DOMContentLoaded', async () => {
     guestForm.addEventListener('submit', async (e) => {
       e.preventDefault();
       const name = guestNameInput.value.trim();
-      const studentCode = guestCodeInput ? guestCodeInput.value.trim() : '';
-      const className = guestClassInput ? guestClassInput.value.trim() : '';
+      const phone = cleanPhone(guestPhoneInput ? guestPhoneInput.value : '');
 
-      if (!name) {
-        showToast('يرجى إدخال اسم الطالب', 'warning');
+      if (!name || name.length < 2) {
+        showToast('يرجى إدخال اسم الطالب بالكامل', 'warning');
+        guestNameInput.focus();
+        return;
+      }
+
+      if (!phone || phone.length < 6) {
+        showToast('يرجى إدخال رقم هاتف صحيح (6 أرقام على الأقل)', 'warning');
+        guestPhoneInput?.focus();
         return;
       }
 
@@ -77,7 +91,7 @@ document.addEventListener('DOMContentLoaded', async () => {
       try {
         const response = await api('/api/auth/passwordless', {
           method: 'POST',
-          body: JSON.stringify({ name, studentCode, className }),
+          body: JSON.stringify({ name, phone }),
         });
 
         if (response.ok && response.user) {
