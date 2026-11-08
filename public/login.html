@@ -44,6 +44,54 @@
       </button>
     </form>
 
+    <!-- Passwordless Student Entry Section (Shown only if enabled by Admin in settings) -->
+    <div id="passwordless-section" style="display: none; margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px dashed var(--gray-300);">
+      <div style="font-size: 0.875rem; color: var(--gray-600); margin-bottom: 0.75rem; font-weight: 700;">
+        ✨ متاح الآن: دخول الطلاب بدون كلمة مرور
+      </div>
+      <button type="button" class="btn btn-outline-primary btn-full" id="btn-toggle-passwordless">
+        🎓 دخول سريع باسم الطالب فقط
+      </button>
+
+      <!-- Passwordless Form -->
+      <form id="passwordless-form" style="display: none; margin-top: 1rem; text-align: right; background: var(--gray-50); padding: 1.25rem; border-radius: var(--radius-md); border: 1px solid var(--primary-border);">
+        <div class="form-group" style="text-align: right;">
+          <label class="form-label" for="guest-name">اسم الطالب بالكامل *</label>
+          <input
+            type="text"
+            id="guest-name"
+            class="form-control"
+            placeholder="مثال: أحمد محمد علي"
+            required
+          >
+        </div>
+
+        <div class="form-group" style="text-align: right;">
+          <label class="form-label" for="guest-code">رقم الجلوس أو الكود <span style="font-size: 0.75rem; color: var(--gray-500);">(اختياري)</span></label>
+          <input
+            type="text"
+            id="guest-code"
+            class="form-control"
+            placeholder="مثال: ST005"
+          >
+        </div>
+
+        <div class="form-group" style="text-align: right; margin-bottom: 1.25rem;">
+          <label class="form-label" for="guest-class">الصف / الشعبة <span style="font-size: 0.75rem; color: var(--gray-500);">(اختياري)</span></label>
+          <input
+            type="text"
+            id="guest-class"
+            class="form-control"
+            placeholder="مثال: الصف الأول الثانوي"
+          >
+        </div>
+
+        <button type="submit" id="guest-submit-btn" class="btn btn-success btn-full" style="font-weight: 700;">
+          🚀 الدخول وبدء الاختبار
+        </button>
+      </form>
+    </div>
+
 
   </div>
 
